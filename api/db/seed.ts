@@ -142,6 +142,10 @@ export const seedCustomers: Customer[] = [
     name: '张小姐',
     phone: '13800138001',
     preferences: '喜欢粉色系，爱加满天星',
+    preference_tags: ['粉色系', '满天星', '甜美风'],
+    favorite_addons: ['精美贺卡'],
+    total_orders: 2,
+    total_spent: 256,
     created_at: formatDateTime(d6),
   },
   {
@@ -149,6 +153,10 @@ export const seedCustomers: Customer[] = [
     name: '李先生',
     phone: '13900139002',
     preferences: '每次加一盒巧克力，预算充足',
+    preference_tags: ['红色系', '豪华款'],
+    favorite_addons: ['巧克力礼盒', '精美贺卡'],
+    total_orders: 1,
+    total_spent: 256,
     created_at: formatDateTime(d5),
   },
   {
@@ -156,6 +164,10 @@ export const seedCustomers: Customer[] = [
     name: '王女士',
     phone: '13700137003',
     preferences: '偏爱百合花，素雅风格',
+    preference_tags: ['百合花', '素雅风', '白色系'],
+    favorite_addons: ['精美贺卡'],
+    total_orders: 2,
+    total_spent: 326,
     created_at: formatDateTime(d4),
   },
   {
@@ -163,6 +175,10 @@ export const seedCustomers: Customer[] = [
     name: '陈先生',
     phone: '13600136004',
     preferences: '送女朋友，喜欢红色系',
+    preference_tags: ['红色系', '浪漫风'],
+    favorite_addons: ['巧克力礼盒', '小熊公仔'],
+    total_orders: 1,
+    total_spent: 888,
     created_at: formatDateTime(d6),
   },
 ];
@@ -176,7 +192,10 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 2, template_name: '粉色梦幻', quantity: 1, unit_price: 138 },
     ],
-    total_price: 138,
+    addons: [
+      { id: 'a1', name: '精美贺卡', price: 10, quantity: 1 },
+    ],
+    total_price: 148,
     status: 'delivering',
     delivery_date: formatDate(today),
     delivery_time: '09:00',
@@ -192,7 +211,10 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 1, template_name: '经典红玫瑰束', quantity: 2, unit_price: 128 },
     ],
-    total_price: 256,
+    addons: [
+      { id: 'a2', name: '巧克力礼盒', price: 68, quantity: 1 },
+    ],
+    total_price: 324,
     status: 'preparing',
     delivery_date: formatDate(today),
     delivery_time: '14:00',
@@ -210,6 +232,7 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 4, template_name: '白色香水百合', quantity: 1, unit_price: 158 },
     ],
+    addons: [],
     total_price: 158,
     status: 'pending',
     delivery_date: formatDate(d3),
@@ -226,7 +249,11 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 3, template_name: '99朵玫瑰', quantity: 1, unit_price: 888 },
     ],
-    total_price: 888,
+    addons: [
+      { id: 'a2', name: '巧克力礼盒', price: 68, quantity: 1 },
+      { id: 'a4', name: '小熊公仔', price: 45, quantity: 1 },
+    ],
+    total_price: 1001,
     status: 'delivered',
     delivery_date: formatDate(d5),
     delivery_time: '18:00',
@@ -245,7 +272,10 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 7, template_name: '康乃馨温馨', quantity: 1, unit_price: 118 },
     ],
-    total_price: 118,
+    addons: [
+      { id: 'a1', name: '精美贺卡', price: 10, quantity: 1 },
+    ],
+    total_price: 128,
     status: 'delivered',
     delivery_date: formatDate(d6),
     delivery_time: '10:00',
@@ -263,7 +293,10 @@ export const seedOrders: Order[] = [
     items: [
       { template_id: 5, template_name: '百合混搭', quantity: 1, unit_price: 168 },
     ],
-    total_price: 168,
+    addons: [
+      { id: 'a1', name: '精美贺卡', price: 10, quantity: 1 },
+    ],
+    total_price: 178,
     status: 'delivered',
     delivery_date: formatDate(d6),
     delivery_time: '15:00',
@@ -271,4 +304,68 @@ export const seedOrders: Order[] = [
     notes: [],
     created_at: formatDateTime(d6),
   },
+  // 补充更多历史订单数据，让月度统计有数据
+  ...generateHistoryOrders(),
 ];
+
+function generateHistoryOrders(): Order[] {
+  const orders: Order[] = [];
+  let orderId = 7;
+  const today = new Date();
+  const templates = [
+    { id: 1, name: '经典红玫瑰束', price: 128 },
+    { id: 2, name: '粉色梦幻', price: 138 },
+    { id: 4, name: '白色香水百合', price: 158 },
+    { id: 6, name: '向日葵混搭', price: 98 },
+    { id: 7, name: '康乃馨温馨', price: 118 },
+    { id: 8, name: '缤纷花束', price: 198 },
+  ];
+  const customers = [
+    { id: 1, name: '张小姐', phone: '13800138001' },
+    { id: 2, name: '李先生', phone: '13900139002' },
+    { id: 3, name: '王女士', phone: '13700137003' },
+    { id: 4, name: '陈先生', phone: '13600136004' },
+  ];
+  const times = ['09:00', '10:30', '11:00', '14:00', '15:30', '16:00', '18:00', '19:30'];
+
+  // 生成过去3个月的历史订单，每月大约8-12单
+  for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
+    const orderCount = 8 + Math.floor(Math.random() * 5);
+    for (let i = 0; i < orderCount; i++) {
+      const date = new Date(today);
+      date.setMonth(date.getMonth() - monthOffset);
+      date.setDate(1 + Math.floor(Math.random() * 28));
+      date.setHours(10 + Math.floor(Math.random() * 10), 0, 0, 0);
+
+      const template = templates[Math.floor(Math.random() * templates.length)];
+      const customer = customers[Math.floor(Math.random() * customers.length)];
+      const time = times[Math.floor(Math.random() * times.length)];
+      const qty = 1 + Math.floor(Math.random() * 2);
+
+      orders.push({
+        id: orderId++,
+        customer_id: customer.id,
+        customer_name: customer.name,
+        customer_phone: customer.phone,
+        items: [
+          {
+            template_id: template.id,
+            template_name: template.name,
+            quantity: qty,
+            unit_price: template.price,
+          },
+        ],
+        addons: [],
+        total_price: template.price * qty,
+        status: 'delivered',
+        delivery_date: date.toISOString().split('T')[0],
+        delivery_time: time,
+        delivery_address: '历史订单配送地址',
+        notes: [],
+        created_at: date.toISOString(),
+      });
+    }
+  }
+
+  return orders;
+}

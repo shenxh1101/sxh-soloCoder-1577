@@ -93,7 +93,16 @@ export const useAppStore = create<AppState>((set, get) => ({
     set({ loading: { ...get().loading, customers: true } });
     try {
       const data = await customersApi.getAll(search);
-      set({ customers: data });
+      const normalized = data.map(c => ({
+        ...c,
+        preference_tags: Array.isArray(c.preference_tags)
+          ? c.preference_tags.map(t => typeof t === 'string' ? t : t.name)
+          : [],
+        favorite_addons: Array.isArray(c.favorite_addons)
+          ? c.favorite_addons.map(a => typeof a === 'string' ? a : a.name)
+          : [],
+      }));
+      set({ customers: normalized });
     } finally {
       set({ loading: { ...get().loading, customers: false } });
     }

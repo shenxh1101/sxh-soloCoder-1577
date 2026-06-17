@@ -9,6 +9,10 @@ import type {
   TopTemplate,
   MonthlyOrder,
   OrderNote,
+  MonthlyComparison,
+  TimeSlotStats,
+  HourlyStats,
+  AddonItem,
 } from '../../shared/types';
 
 const API_BASE = '/api';
@@ -83,6 +87,7 @@ export const ordersApi = {
     customer_name: string;
     customer_phone: string;
     items: Array<{ template_id: number; template_name: string; quantity: number; unit_price: number; customizations?: string }>;
+    addons: AddonItem[];
     total_price: number;
     delivery_date: string;
     delivery_time: string;
@@ -136,4 +141,23 @@ export const statsApi = {
     request<TopTemplate[]>(`/stats/top-templates${limit ? `?limit=${limit}` : ''}`),
 
   getOrdersByMonth: () => request<MonthlyOrder[]>('/stats/orders-by-month'),
+
+  getMonthlyComparison: (month?: string) =>
+    request<MonthlyComparison>(`/stats/monthly-comparison${month ? `?month=${month}` : ''}`),
+
+  getTimeSlots: (month?: string) =>
+    request<TimeSlotStats[]>(`/stats/time-slots${month ? `?month=${month}` : ''}`),
+
+  getHourlyStats: (month?: string) =>
+    request<HourlyStats[]>(`/stats/hourly-stats${month ? `?month=${month}` : ''}`),
+
+  getDateRangeStats: (dateFrom: string, dateTo: string) =>
+    request<{
+      order_count: number;
+      total_revenue: number;
+      avg_order_value: number;
+      top_templates: TopTemplate[];
+      hourly_stats: HourlyStats[];
+      time_slots: TimeSlotStats[];
+    }>(`/stats/date-range?dateFrom=${dateFrom}&dateTo=${dateTo}`),
 };

@@ -13,6 +13,7 @@ import {
   Truck,
   XCircle,
   Flower2,
+  ShoppingBag,
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import StatusBadge from '../components/StatusBadge';
@@ -124,7 +125,7 @@ export default function OrderDetailPage() {
             </div>
           </div>
 
-          <div className="card p-6">
+            <div className="card p-6">
             <h2 className="text-lg font-display font-semibold text-cocoa-800 mb-4 flex items-center gap-2">
               <Flower2 className="w-5 h-5 text-primary-500" />
               花束信息
@@ -157,6 +158,29 @@ export default function OrderDetailPage() {
                 </div>
               ))}
             </div>
+
+            {order.addons && order.addons.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-cocoa-100">
+                <h3 className="font-medium text-cocoa-700 mb-3 flex items-center gap-2">
+                  <ShoppingBag className="w-4 h-4 text-sage-500" />
+                  加购商品
+                </h3>
+                <div className="space-y-2">
+                  {order.addons.map((addon, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-3 bg-sage-50/50 rounded-lg"
+                    >
+                      <span className="text-cocoa-700">{addon.name}</span>
+                      <span className="text-primary-500 font-medium">
+                        ¥{addon.price} × {addon.quantity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mt-4 pt-4 border-t border-cocoa-100 flex justify-between items-center">
               <span className="text-cocoa-600">总计</span>
               <span className="text-2xl font-semibold text-primary-500">

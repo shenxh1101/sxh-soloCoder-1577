@@ -13,12 +13,23 @@ import {
   Phone,
   MapPin,
   Clock,
+  Tag,
+  ShoppingBag,
+  Heart,
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { templatesApi } from '../api';
-import type { Template, Customer, OrderItem } from '../../shared/types';
+import type { Template, Customer, OrderItem, AddonItem } from '../../shared/types';
 
 type Step = 1 | 2 | 3;
+
+const allAddons: Omit<AddonItem, 'id'>[] = [
+  { name: '巧克力礼盒', price: 68, quantity: 1 },
+  { name: '精美贺卡', price: 15, quantity: 1 },
+  { name: '小熊公仔', price: 45, quantity: 1 },
+  { name: '香薰蜡烛', price: 58, quantity: 1 },
+  { name: '香槟酒', price: 128, quantity: 1 },
+];
 
 export default function NewOrderPage() {
   const navigate = useNavigate();
@@ -33,6 +44,8 @@ export default function NewOrderPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [stockCheck, setStockCheck] = useState<{ sufficient: boolean; shortages: any[] } | null>(null);
+
+  const [selectedAddons, setSelectedAddons] = useState<AddonItem[]>([]);
 
   const [deliveryDate, setDeliveryDate] = useState('');
   const [deliveryTime, setDeliveryTime] = useState('');
@@ -55,6 +68,24 @@ export default function NewOrderPage() {
     }
   }, [selectedTemplate, quantity]);
 
+  // 选客户时自动勾选常购加购项
+  useEffect(() => {
+    if (selectedCustomer && selectedCustomer.favorite_addons) {
+      const autoAddons = selectedCustomer.favorite_addons
+        .map(name => {
+          const addon = allAddons.find(a => a.name === name);
+          if (addon) {
+            return { ...addon, id: `addon-${Date.now()}-${name}` };
+          }
+          return null;
+        })
+        .filter(Boolean) as AddonItem[];
+      setSelectedAddons(autoAddons);
+    } else {
+      setSelectedAddons([]);
+    }
+  }, [selectedCustomer]);
+
   const filteredCustomers = customers.filter(c =>
     c.name.includes(customerSearch) || c.phone.includes(customerSearch)
   );
@@ -76,7 +107,18 @@ export default function NewOrderPage() {
     setQuantity(1);
   };
 
-  const totalPrice = selectedTemplate ? selectedTemplate.base_price * quantity : 0;
+  const toggleAddon = (addonDef: Omit<AddonItem, 'id'>) => {
+    const existing = selectedAddons.find(a => a.name === addonDef.name);
+    if (existing) {
+      setSelectedAddons(prev => prev.filter(a => a.name !== addonDef.name));
+    } else {
+      setSelectedAddons(prev => [...prev, { ...addonDef, id: `addon-${Date.now()}` }]);
+    }
+  };
+
+  const flowerTotal = selectedTemplate ? selectedTemplate.base_price * quantity : 0;
+  const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price * a.quantity, 0);
+  const totalPrice = flowerTotal + addonsTotal;
 
   const canGoNext = () => {
     if (step === 1) return selectedCustomer !== null;
@@ -103,6 +145,7 @@ export default function NewOrderPage() {
         customer_name: selectedCustomer.name,
         customer_phone: selectedCustomer.phone,
         items: orderItems,
+        addons: selectedAddons,
         total_price: totalPrice,
         delivery_date: deliveryDate,
         delivery_time: deliveryTime,
@@ -210,7 +253,7 @@ export default function NewOrderPage() {
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-300 to-primary-400 flex items-center justify-center text-white font-medium">
                     {customer.name.charAt(0)}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <p className="font-medium text-cocoa-800">{customer.name}</p>
                     <p className="text-sm text-cocoa-500">{customer.phone}</p>
                   </div>
@@ -220,10 +263,31 @@ export default function NewOrderPage() {
                     </div>
                   )}
                 </div>
-                {customer.preferences && (
-                  <p className="text-xs text-cocoa-500 mt-2 pt-2 border-t border-cocoa-200/50">
-                    💡 {customer.preferences}
-                  </p>
+
+                {customer.preference_tags && customer.preference_tags.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-cocoa-200/50 flex flex-wrap gap-1">
+                    {customer.preference_tags.slice(0, 3).map(tag => (
+                      <span
+                        key={tag}
+                        className="px-2 py-0.5 bg-primary-100/50 text-primary-600 rounded-full text-xs"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {customer.preference_tags.length > 3 && (
+                      <span className="px-2 py-0.5 bg-cocoa-100 text-cocoa-500 rounded-full text-xs">
+                        +{customer.preference_tags.length - 3}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {customer.favorite_addons && customer.favorite_addons.length > 0 && (
+                  <div className="mt-2 flex items-center gap-1 text-xs text-sage-600">
+                    <ShoppingBag className="w-3 h-3" />
+                    <span>常购：{customer.favorite_addons.slice(0, 2).join('、')}</span>
+                    {customer.favorite_addons.length > 2 && ` +${customer.favorite_addons.length - 2}`}
+                  </div>
                 )}
               </div>
             ))}
@@ -280,34 +344,77 @@ export default function NewOrderPage() {
       )}
 
       {step === 2 && (
-        <div className="card p-6 animate-slide-up">
-          <h2 className="text-lg font-display font-semibold text-cocoa-800 mb-4">
-            选择花束模板
-          </h2>
+        <div className="card p-6 animate-slide-up space-y-6">
+          <div>
+            <h2 className="text-lg font-display font-semibold text-cocoa-800 mb-4">
+              选择花束模板
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {templates.map(template => (
-              <div
-                key={template.id}
-                onClick={() => handleSelectTemplate(template)}
-                className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
-                  selectedTemplate?.id === template.id
-                    ? 'border-primary-400 bg-primary-50'
-                    : 'border-transparent bg-cocoa-50 hover:bg-cocoa-100'
-                }`}
-              >
-                <div className="aspect-video rounded-lg bg-gradient-to-br from-primary-100 to-sage-100 flex items-center justify-center mb-3">
-                  <Flower2 className="w-10 h-10 text-primary-300" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {templates.map(template => (
+                <div
+                  key={template.id}
+                  onClick={() => handleSelectTemplate(template)}
+                  className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                    selectedTemplate?.id === template.id
+                      ? 'border-primary-400 bg-primary-50'
+                      : 'border-transparent bg-cocoa-50 hover:bg-cocoa-100'
+                  }`}
+                >
+                  <div className="aspect-video rounded-lg bg-gradient-to-br from-primary-100 to-sage-100 flex items-center justify-center mb-3">
+                    <Flower2 className="w-10 h-10 text-primary-300" />
+                  </div>
+                  <h3 className="font-medium text-cocoa-800">{template.name}</h3>
+                  <p className="text-xs text-cocoa-500 mt-1 line-clamp-2">
+                    {template.description}
+                  </p>
+                  <p className="text-primary-500 font-semibold mt-2">
+                    ¥{template.base_price}
+                  </p>
                 </div>
-                <h3 className="font-medium text-cocoa-800">{template.name}</h3>
-                <p className="text-xs text-cocoa-500 mt-1 line-clamp-2">
-                  {template.description}
-                </p>
-                <p className="text-primary-500 font-semibold mt-2">
-                  ¥{template.base_price}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
+          </div>
+
+          {/* 加购商品 */}
+          <div>
+            <h3 className="font-display font-semibold text-cocoa-800 mb-3 flex items-center gap-2">
+              <ShoppingBag className="w-5 h-5 text-sage-500" />
+              加购商品
+              {selectedCustomer?.favorite_addons && selectedCustomer.favorite_addons.length > 0 && (
+                <span className="text-xs font-normal text-sage-600 bg-sage-50 px-2 py-0.5 rounded-full">
+                  已为您勾选常购
+                </span>
+              )}
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              {allAddons.map(addon => {
+                const isSelected = selectedAddons.some(a => a.name === addon.name);
+                const isFavorite = selectedCustomer?.favorite_addons?.includes(addon.name);
+                return (
+                  <button
+                    key={addon.name}
+                    onClick={() => toggleAddon(addon)}
+                    className={`p-3 rounded-xl text-left transition-all border-2 relative ${
+                      isSelected
+                        ? 'border-sage-400 bg-sage-50'
+                        : 'border-transparent bg-cocoa-50 hover:bg-cocoa-100'
+                    }`}
+                  >
+                    {isFavorite && (
+                      <Heart className="absolute top-2 right-2 w-3.5 h-3.5 text-primary-400 fill-primary-400" />
+                    )}
+                    <p className="text-sm font-medium text-cocoa-800">{addon.name}</p>
+                    <p className="text-xs text-primary-500 mt-1">¥{addon.price}</p>
+                    {isSelected && (
+                      <div className="absolute top-2 left-2 w-5 h-5 rounded-full bg-sage-500 flex items-center justify-center">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {selectedTemplate && (
@@ -359,11 +466,25 @@ export default function NewOrderPage() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between pt-3 border-t border-sage-200">
-                <span className="text-cocoa-600">总价</span>
-                <span className="text-xl font-semibold text-primary-500">
-                  ¥{totalPrice}
-                </span>
+              <div className="space-y-2 pt-3 border-t border-sage-200">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-cocoa-500">花束 × {quantity}</span>
+                  <span className="text-cocoa-700">¥{flowerTotal}</span>
+                </div>
+                {selectedAddons.length > 0 && (
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-cocoa-500">
+                      加购 ({selectedAddons.length} 件)
+                    </span>
+                    <span className="text-cocoa-700">¥{addonsTotal}</span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between pt-2 border-t border-sage-200">
+                  <span className="font-medium text-cocoa-700">总价</span>
+                  <span className="text-xl font-semibold text-primary-500">
+                    ¥{totalPrice}
+                  </span>
+                </div>
               </div>
             </div>
           )}
@@ -379,7 +500,7 @@ export default function NewOrderPage() {
           <div className="space-y-4 max-w-md">
             <div>
               <label className="text-sm text-cocoa-600 mb-1.5 flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <CalendarIcon className="w-4 h-4" />
                 配送日期
               </label>
               <input
@@ -440,6 +561,14 @@ export default function NewOrderPage() {
                     {selectedTemplate.name} × {quantity}
                   </span>
                 </div>
+                {selectedAddons.length > 0 && (
+                  <div className="flex justify-between">
+                    <span className="text-cocoa-500">加购</span>
+                    <span className="text-cocoa-700">
+                      {selectedAddons.map(a => a.name).join('、')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-cocoa-500">配送</span>
                   <span className="text-cocoa-700 flex items-center gap-1">
@@ -489,7 +618,7 @@ export default function NewOrderPage() {
   );
 }
 
-function Calendar(props: any) {
+function CalendarIcon(props: any) {
   return (
     <svg
       {...props}

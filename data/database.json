@@ -257,28 +257,68 @@
       "name": "张小姐",
       "phone": "13800138001",
       "preferences": "喜欢粉色系，爱加满天星",
-      "created_at": "2026-06-03T16:42:16.007Z"
+      "preference_tags": [
+        "粉色系",
+        "满天星",
+        "甜美风"
+      ],
+      "favorite_addons": [
+        "精美贺卡"
+      ],
+      "total_orders": 2,
+      "total_spent": 256,
+      "created_at": "2026-06-03T17:38:01.541Z"
     },
     {
       "id": 2,
       "name": "李先生",
       "phone": "13900139002",
       "preferences": "每次加一盒巧克力，预算充足",
-      "created_at": "2026-06-10T16:42:16.007Z"
+      "preference_tags": [
+        "红色系",
+        "豪华款"
+      ],
+      "favorite_addons": [
+        "巧克力礼盒",
+        "精美贺卡"
+      ],
+      "total_orders": 1,
+      "total_spent": 256,
+      "created_at": "2026-06-10T17:38:01.541Z"
     },
     {
       "id": 3,
       "name": "王女士",
       "phone": "13700137003",
       "preferences": "偏爱百合花，素雅风格",
-      "created_at": "2026-06-14T16:42:16.007Z"
+      "preference_tags": [
+        "百合花",
+        "素雅风",
+        "白色系"
+      ],
+      "favorite_addons": [
+        "精美贺卡"
+      ],
+      "total_orders": 2,
+      "total_spent": 326,
+      "created_at": "2026-06-14T17:38:01.541Z"
     },
     {
       "id": 4,
       "name": "陈先生",
       "phone": "13600136004",
       "preferences": "送女朋友，喜欢红色系",
-      "created_at": "2026-06-03T16:42:16.007Z"
+      "preference_tags": [
+        "红色系",
+        "浪漫风"
+      ],
+      "favorite_addons": [
+        "巧克力礼盒",
+        "小熊公仔"
+      ],
+      "total_orders": 1,
+      "total_spent": 888,
+      "created_at": "2026-06-03T17:38:01.541Z"
     }
   ],
   "orders": [
@@ -295,13 +335,21 @@
           "unit_price": 138
         }
       ],
-      "total_price": 138,
+      "addons": [
+        {
+          "id": "a1",
+          "name": "精美贺卡",
+          "price": 10,
+          "quantity": 1
+        }
+      ],
+      "total_price": 148,
       "status": "delivering",
       "delivery_date": "2026-06-17",
       "delivery_time": "09:00",
       "delivery_address": "朝阳区建国路88号SOHO现代城A座1203",
       "notes": [],
-      "created_at": "2026-06-14T16:42:16.007Z"
+      "created_at": "2026-06-14T17:38:01.541Z"
     },
     {
       "id": 2,
@@ -316,7 +364,15 @@
           "unit_price": 128
         }
       ],
-      "total_price": 256,
+      "addons": [
+        {
+          "id": "a2",
+          "name": "巧克力礼盒",
+          "price": 68,
+          "quantity": 1
+        }
+      ],
+      "total_price": 324,
       "status": "preparing",
       "delivery_date": "2026-06-17",
       "delivery_time": "14:00",
@@ -325,10 +381,10 @@
         {
           "id": 1,
           "content": "加一盒巧克力",
-          "created_at": "2026-06-14T16:42:16.007Z"
+          "created_at": "2026-06-14T17:38:01.541Z"
         }
       ],
-      "created_at": "2026-06-14T16:42:16.007Z"
+      "created_at": "2026-06-14T17:38:01.541Z"
     },
     {
       "id": 3,
@@ -343,6 +399,7 @@
           "unit_price": 158
         }
       ],
+      "addons": [],
       "total_price": 158,
       "status": "pending",
       "delivery_date": "2026-06-19",
@@ -364,7 +421,21 @@
           "unit_price": 888
         }
       ],
-      "total_price": 888,
+      "addons": [
+        {
+          "id": "a2",
+          "name": "巧克力礼盒",
+          "price": 68,
+          "quantity": 1
+        },
+        {
+          "id": "a4",
+          "name": "小熊公仔",
+          "price": 45,
+          "quantity": 1
+        }
+      ],
+      "total_price": 1001,
       "status": "delivered",
       "delivery_date": "2026-06-10",
       "delivery_time": "18:00",
@@ -373,15 +444,15 @@
         {
           "id": 2,
           "content": "客户说花很新鲜，非常满意",
-          "created_at": "2026-06-10T16:42:16.007Z"
+          "created_at": "2026-06-10T17:38:01.541Z"
         },
         {
           "id": 3,
           "content": "门口保安代收",
-          "created_at": "2026-06-10T16:42:16.007Z"
+          "created_at": "2026-06-10T17:38:01.541Z"
         }
       ],
-      "created_at": "2026-06-10T16:42:16.007Z"
+      "created_at": "2026-06-10T17:38:01.541Z"
     },
     {
       "id": 5,
@@ -396,7 +467,15 @@
           "unit_price": 118
         }
       ],
-      "total_price": 118,
+      "addons": [
+        {
+          "id": "a1",
+          "name": "精美贺卡",
+          "price": 10,
+          "quantity": 1
+        }
+      ],
+      "total_price": 128,
       "status": "delivered",
       "delivery_date": "2026-06-03",
       "delivery_time": "10:00",
@@ -405,10 +484,10 @@
         {
           "id": 4,
           "content": "送给妈妈的生日花，阿姨很喜欢",
-          "created_at": "2026-06-03T16:42:16.007Z"
+          "created_at": "2026-06-03T17:38:01.541Z"
         }
       ],
-      "created_at": "2026-06-03T16:42:16.007Z"
+      "created_at": "2026-06-03T17:38:01.541Z"
     },
     {
       "id": 6,
@@ -423,13 +502,615 @@
           "unit_price": 168
         }
       ],
-      "total_price": 168,
+      "addons": [
+        {
+          "id": "a1",
+          "name": "精美贺卡",
+          "price": 10,
+          "quantity": 1
+        }
+      ],
+      "total_price": 178,
       "status": "delivered",
       "delivery_date": "2026-06-03",
       "delivery_time": "15:00",
       "delivery_address": "西城区金融街27号投资广场B座801",
       "notes": [],
-      "created_at": "2026-06-03T16:42:16.007Z"
+      "created_at": "2026-06-03T17:38:01.541Z"
+    },
+    {
+      "id": 7,
+      "customer_id": 2,
+      "customer_name": "李先生",
+      "customer_phone": "13900139002",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 2,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 236,
+      "status": "delivered",
+      "delivery_date": "2026-06-04",
+      "delivery_time": "11:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-04T04:00:00.000Z"
+    },
+    {
+      "id": 8,
+      "customer_id": 1,
+      "customer_name": "张小姐",
+      "customer_phone": "13800138001",
+      "items": [
+        {
+          "template_id": 8,
+          "template_name": "缤纷花束",
+          "quantity": 2,
+          "unit_price": 198
+        }
+      ],
+      "addons": [],
+      "total_price": 396,
+      "status": "delivered",
+      "delivery_date": "2026-06-04",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-04T07:00:00.000Z"
+    },
+    {
+      "id": 9,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-06-01",
+      "delivery_time": "18:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-01T11:00:00.000Z"
+    },
+    {
+      "id": 10,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 8,
+          "template_name": "缤纷花束",
+          "quantity": 2,
+          "unit_price": 198
+        }
+      ],
+      "addons": [],
+      "total_price": 396,
+      "status": "delivered",
+      "delivery_date": "2026-06-10",
+      "delivery_time": "19:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-10T08:00:00.000Z"
+    },
+    {
+      "id": 11,
+      "customer_id": 2,
+      "customer_name": "李先生",
+      "customer_phone": "13900139002",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 2,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 316,
+      "status": "delivered",
+      "delivery_date": "2026-06-16",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-16T06:00:00.000Z"
+    },
+    {
+      "id": 12,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 2,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 316,
+      "status": "delivered",
+      "delivery_date": "2026-06-28",
+      "delivery_time": "16:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-28T05:00:00.000Z"
+    },
+    {
+      "id": 13,
+      "customer_id": 2,
+      "customer_name": "李先生",
+      "customer_phone": "13900139002",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 2,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 316,
+      "status": "delivered",
+      "delivery_date": "2026-06-20",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-20T03:00:00.000Z"
+    },
+    {
+      "id": 14,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 6,
+          "template_name": "向日葵混搭",
+          "quantity": 1,
+          "unit_price": 98
+        }
+      ],
+      "addons": [],
+      "total_price": 98,
+      "status": "delivered",
+      "delivery_date": "2026-06-19",
+      "delivery_time": "15:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-06-19T06:00:00.000Z"
+    },
+    {
+      "id": 15,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-05-14",
+      "delivery_time": "15:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-14T03:00:00.000Z"
+    },
+    {
+      "id": 16,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 1,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 118,
+      "status": "delivered",
+      "delivery_date": "2026-05-26",
+      "delivery_time": "19:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-26T02:00:00.000Z"
+    },
+    {
+      "id": 17,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 8,
+          "template_name": "缤纷花束",
+          "quantity": 2,
+          "unit_price": 198
+        }
+      ],
+      "addons": [],
+      "total_price": 396,
+      "status": "delivered",
+      "delivery_date": "2026-05-08",
+      "delivery_time": "19:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-08T06:00:00.000Z"
+    },
+    {
+      "id": 18,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-05-23",
+      "delivery_time": "16:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-23T08:00:00.000Z"
+    },
+    {
+      "id": 19,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 1,
+          "template_name": "经典红玫瑰束",
+          "quantity": 1,
+          "unit_price": 128
+        }
+      ],
+      "addons": [],
+      "total_price": 128,
+      "status": "delivered",
+      "delivery_date": "2026-05-26",
+      "delivery_time": "18:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-26T09:00:00.000Z"
+    },
+    {
+      "id": 20,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 1,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 118,
+      "status": "delivered",
+      "delivery_date": "2026-05-18",
+      "delivery_time": "11:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-18T06:00:00.000Z"
+    },
+    {
+      "id": 21,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 1,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 118,
+      "status": "delivered",
+      "delivery_date": "2026-05-21",
+      "delivery_time": "10:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-21T06:00:00.000Z"
+    },
+    {
+      "id": 22,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 2,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 316,
+      "status": "delivered",
+      "delivery_date": "2026-05-26",
+      "delivery_time": "14:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-26T11:00:00.000Z"
+    },
+    {
+      "id": 23,
+      "customer_id": 1,
+      "customer_name": "张小姐",
+      "customer_phone": "13800138001",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-05-04",
+      "delivery_time": "10:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-05-04T05:00:00.000Z"
+    },
+    {
+      "id": 24,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 8,
+          "template_name": "缤纷花束",
+          "quantity": 1,
+          "unit_price": 198
+        }
+      ],
+      "addons": [],
+      "total_price": 198,
+      "status": "delivered",
+      "delivery_date": "2026-04-05",
+      "delivery_time": "18:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-05T10:00:00.000Z"
+    },
+    {
+      "id": 25,
+      "customer_id": 1,
+      "customer_name": "张小姐",
+      "customer_phone": "13800138001",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-04-22",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-22T11:00:00.000Z"
+    },
+    {
+      "id": 26,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 6,
+          "template_name": "向日葵混搭",
+          "quantity": 2,
+          "unit_price": 98
+        }
+      ],
+      "addons": [],
+      "total_price": 196,
+      "status": "delivered",
+      "delivery_date": "2026-04-23",
+      "delivery_time": "10:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-23T07:00:00.000Z"
+    },
+    {
+      "id": 27,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 1,
+          "template_name": "经典红玫瑰束",
+          "quantity": 2,
+          "unit_price": 128
+        }
+      ],
+      "addons": [],
+      "total_price": 256,
+      "status": "delivered",
+      "delivery_date": "2026-04-22",
+      "delivery_time": "10:30",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-22T03:00:00.000Z"
+    },
+    {
+      "id": 28,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 2,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 236,
+      "status": "delivered",
+      "delivery_date": "2026-04-27",
+      "delivery_time": "14:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-27T03:00:00.000Z"
+    },
+    {
+      "id": 29,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 1,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 158,
+      "status": "delivered",
+      "delivery_date": "2026-04-18",
+      "delivery_time": "11:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-18T04:00:00.000Z"
+    },
+    {
+      "id": 30,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 1,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 158,
+      "status": "delivered",
+      "delivery_date": "2026-04-23",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-23T08:00:00.000Z"
+    },
+    {
+      "id": 31,
+      "customer_id": 4,
+      "customer_name": "陈先生",
+      "customer_phone": "13600136004",
+      "items": [
+        {
+          "template_id": 7,
+          "template_name": "康乃馨温馨",
+          "quantity": 2,
+          "unit_price": 118
+        }
+      ],
+      "addons": [],
+      "total_price": 236,
+      "status": "delivered",
+      "delivery_date": "2026-04-20",
+      "delivery_time": "09:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-20T08:00:00.000Z"
+    },
+    {
+      "id": 32,
+      "customer_id": 1,
+      "customer_name": "张小姐",
+      "customer_phone": "13800138001",
+      "items": [
+        {
+          "template_id": 2,
+          "template_name": "粉色梦幻",
+          "quantity": 1,
+          "unit_price": 138
+        }
+      ],
+      "addons": [],
+      "total_price": 138,
+      "status": "delivered",
+      "delivery_date": "2026-04-07",
+      "delivery_time": "14:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-07T07:00:00.000Z"
+    },
+    {
+      "id": 33,
+      "customer_id": 3,
+      "customer_name": "王女士",
+      "customer_phone": "13700137003",
+      "items": [
+        {
+          "template_id": 4,
+          "template_name": "白色香水百合",
+          "quantity": 1,
+          "unit_price": 158
+        }
+      ],
+      "addons": [],
+      "total_price": 158,
+      "status": "delivered",
+      "delivery_date": "2026-04-08",
+      "delivery_time": "14:00",
+      "delivery_address": "历史订单配送地址",
+      "notes": [],
+      "created_at": "2026-04-08T09:00:00.000Z"
     }
   ],
   "inventory_logs": [],
@@ -437,7 +1118,7 @@
     "flower": 11,
     "template": 9,
     "customer": 5,
-    "order": 7,
+    "order": 34,
     "orderNote": 10,
     "inventoryLog": 1
   }

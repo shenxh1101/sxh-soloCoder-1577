@@ -38,17 +38,26 @@ export interface OrderNote {
   created_at: string;
 }
 
+export interface AddonItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
 export interface Order {
   id: number;
   customer_id: number;
   customer_name: string;
   customer_phone: string;
   items: OrderItem[];
+  addons: AddonItem[];
   total_price: number;
   status: OrderStatus;
   delivery_date: string;
   delivery_time: string;
   delivery_address: string;
+  recipient_name?: string;
   notes: OrderNote[];
   created_at: string;
 }
@@ -58,6 +67,10 @@ export interface Customer {
   name: string;
   phone: string;
   preferences: string;
+  preference_tags: string[];
+  favorite_addons: string[];
+  total_orders?: number;
+  total_spent?: number;
   created_at: string;
 }
 
@@ -92,4 +105,43 @@ export interface SalesStats {
   total_revenue: number;
   avg_order_value: number;
   total_customers: number;
+}
+
+export interface TimeSlotStats {
+  slot: 'morning' | 'afternoon' | 'evening' | 'night';
+  label: string;
+  order_count: number;
+  total_revenue: number;
+}
+
+export interface HourlyStats {
+  hour: number;
+  order_count: number;
+  total_revenue: number;
+}
+
+export interface MonthlyComparison {
+  current: {
+    month: string;
+    order_count: number;
+    total_revenue: number;
+    avg_order_value: number;
+    top_template: TopTemplate | null;
+  };
+  previous: {
+    month: string;
+    order_count: number;
+    total_revenue: number;
+    avg_order_value: number;
+    top_template: TopTemplate | null;
+  };
+  changes: {
+    order_count_change: number;
+    order_count_change_percent: number;
+    revenue_change: number;
+    revenue_change_percent: number;
+  };
+  top_templates: TopTemplate[];
+  time_slots: TimeSlotStats[];
+  hourly_stats: HourlyStats[];
 }

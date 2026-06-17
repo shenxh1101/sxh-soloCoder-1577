@@ -11,9 +11,24 @@ import {
   X,
   Edit3,
   Save,
+  Tag,
+  ShoppingBag,
+  Trash2,
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
-import type { Customer } from '../../shared/types';
+import type { Customer, AddonItem } from '../../shared/types';
+
+const defaultAddons: Omit<AddonItem, 'id'>[] = [
+  { name: '巧克力礼盒', price: 68, quantity: 1 },
+  { name: '精美贺卡', price: 15, quantity: 1 },
+  { name: '小熊公仔', price: 45, quantity: 1 },
+  { name: '香薰蜡烛', price: 58, quantity: 1 },
+  { name: '香槟酒', price: 128, quantity: 1 },
+];
+
+const styleTags = ['粉色系', '白色系', '红色系', '紫色系', '黄色系', '复古风', '森系', '简约风'];
+const flowerTags = ['玫瑰', '百合', '康乃馨', '向日葵', '满天星', '郁金香', '绣球', '洋桔梗'];
+const addonTags = ['巧克力', '贺卡', '小熊', '蜡烛', '香槟', '蛋糕'];
 
 export default function CustomersPage() {
   const { customers, fetchCustomers, createCustomer, updateCustomer } = useAppStore();
@@ -22,7 +37,13 @@ export default function CustomersPage() {
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
   const [newCustomer, setNewCustomer] = useState({ name: '', phone: '', preferences: '' });
   const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({ name: '', phone: '', preferences: '' });
+  const [editData, setEditData] = useState({
+    name: '',
+    phone: '',
+    preferences: '',
+    preference_tags: [] as string[],
+    favorite_addons: [] as string[],
+  });
 
   useEffect(() => {
     fetchCustomers();
@@ -47,7 +68,9 @@ export default function CustomersPage() {
     setEditData({
       name: customer.name,
       phone: customer.phone,
-      preferences: customer.preferences,
+      preferences: customer.preferences || '',
+      preference_tags: customer.preference_tags || [],
+      favorite_addons: customer.favorite_addons || [],
     });
     setIsEditing(true);
   };
@@ -57,6 +80,25 @@ export default function CustomersPage() {
     await updateCustomer(selectedCustomer.id, editData);
     setIsEditing(false);
     setSelectedCustomer(null);
+    await fetchCustomers();
+  };
+
+  const togglePreferenceTag = (tag: string) => {
+    setEditData(prev => ({
+      ...prev,
+      preference_tags: prev.preference_tags.includes(tag)
+        ? prev.preference_tags.filter(t => t !== tag)
+        : [...prev.preference_tags, tag],
+    }));
+  };
+
+  const toggleFavoriteAddon = (addonName: string) => {
+    setEditData(prev => ({
+      ...prev,
+      favorite_addons: prev.favorite_addons.includes(addonName)
+        ? prev.favorite_addons.filter(a => a !== addonName)
+        : [...prev.favorite_addons, addonName],
+    }));
   };
 
   const formatDate = (dateStr: string) => {
@@ -116,19 +158,47 @@ export default function CustomersPage() {
                   <Phone className="w-3.5 h-3.5" />
                   {customer.phone}
                 </p>
+                {customer.total_orders !== undefined && (
+                  <p className="text-xs text-cocoa-400 mt-1">
+                    累计 {customer.total_orders} 单 · ¥{customer.total_spent?.toFixed(0) || 0}
+                  </p>
+                )}
               </div>
               <ChevronRight className="w-5 h-5 text-cocoa-400 flex-shrink-0 mt-2" />
             </div>
-            {customer.preferences && (
-              <div className="mt-4 pt-4 border-t border-cocoa-100">
-                <div className="flex items-start gap-2">
-                  <Heart className="w-4 h-4 text-primary-400 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-cocoa-600 line-clamp-2">
-                    {customer.preferences}
-                  </p>
-                </div>
+
+            {customer.preference_tags && customer.preference_tags.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {customer.preference_tags.slice(0, 4).map(tag => (
+                  <span
+                    key={tag}
+                    className="px-2 py-0.5 bg-primary-50 text-primary-600 rounded-full text-xs"
+                  >
+                    {tag}
+                  </span>
+                ))}
+                {customer.preference_tags.length > 4 && (
+                  <span className="px-2 py-0.5 bg-cocoa-100 text-cocoa-500 rounded-full text-xs">
+                    +{customer.preference_tags.length - 4}
+                  </span>
+                )}
               </div>
             )}
+
+            {customer.favorite_addons && customer.favorite_addons.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {customer.favorite_addons.slice(0, 3).map(addon => (
+                  <span
+                    key={addon}
+                    className="px-2 py-0.5 bg-sage-50 text-sage-600 rounded-full text-xs flex items-center gap-1"
+                  >
+                    <ShoppingBag className="w-3 h-3" />
+                    {addon}
+                  </span>
+                ))}
+              </div>
+            )}
+
             <div className="mt-3 flex items-center gap-1 text-xs text-cocoa-400">
               <Clock className="w-3 h-3" />
               <span>首次到店：{formatDate(customer.created_at)}</span>
@@ -234,7 +304,7 @@ export default function CustomersPage() {
           }}
         >
           <div
-            className="card p-6 w-full max-w-lg max-h-[80vh] overflow-y-auto animate-slide-up"
+            className="card p-6 w-full max-w-lg max-h-[85vh] overflow-y-auto animate-slide-up"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-start justify-between mb-6">
@@ -298,11 +368,130 @@ export default function CustomersPage() {
               </div>
             </div>
 
-            <div className="space-y-6">
+            {selectedCustomer.total_orders !== undefined && (
+              <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="bg-primary-50/50 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-bold text-primary-600">{selectedCustomer.total_orders}</p>
+                  <p className="text-xs text-cocoa-500 mt-1">累计订单</p>
+                </div>
+                <div className="bg-sage-50/50 rounded-xl p-3 text-center">
+                  <p className="text-2xl font-bold text-sage-600">¥{selectedCustomer.total_spent?.toFixed(0) || 0}</p>
+                  <p className="text-xs text-cocoa-500 mt-1">累计消费</p>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-5">
+              {/* 偏好标签 */}
+              <div>
+                <h4 className="font-medium text-cocoa-800 mb-3 flex items-center gap-2">
+                  <Tag className="w-4 h-4 text-primary-500" />
+                  常购偏好
+                </h4>
+                {isEditing ? (
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-xs text-cocoa-500 mb-2">风格色系</p>
+                      <div className="flex flex-wrap gap-2">
+                        {styleTags.map(tag => (
+                          <button
+                            key={tag}
+                            onClick={() => togglePreferenceTag(tag)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                              editData.preference_tags.includes(tag)
+                                ? 'bg-primary-400 text-white'
+                                : 'bg-cocoa-100 text-cocoa-600 hover:bg-cocoa-200'
+                            }`}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs text-cocoa-500 mb-2">花材偏好</p>
+                      <div className="flex flex-wrap gap-2">
+                        {flowerTags.map(tag => (
+                          <button
+                            key={tag}
+                            onClick={() => togglePreferenceTag(tag)}
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                              editData.preference_tags.includes(tag)
+                                ? 'bg-sage-400 text-white'
+                                : 'bg-cocoa-100 text-cocoa-600 hover:bg-cocoa-200'
+                            }`}
+                          >
+                            {tag}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCustomer.preference_tags && selectedCustomer.preference_tags.length > 0 ? (
+                      selectedCustomer.preference_tags.map(tag => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 bg-primary-50 text-primary-600 rounded-full text-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))
+                    ) : (
+                      <p className="text-sm text-cocoa-400">暂无偏好标签</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* 常购加购 */}
+              <div>
+                <h4 className="font-medium text-cocoa-800 mb-3 flex items-center gap-2">
+                  <ShoppingBag className="w-4 h-4 text-sage-500" />
+                  常购加购项
+                </h4>
+                {isEditing ? (
+                  <div className="grid grid-cols-2 gap-2">
+                    {defaultAddons.map(addon => (
+                      <button
+                        key={addon.name}
+                        onClick={() => toggleFavoriteAddon(addon.name)}
+                        className={`p-3 rounded-xl text-left transition-all border-2 ${
+                          editData.favorite_addons.includes(addon.name)
+                            ? 'border-sage-400 bg-sage-50'
+                            : 'border-transparent bg-cocoa-50 hover:bg-cocoa-100'
+                        }`}
+                      >
+                        <p className="text-sm font-medium text-cocoa-800">{addon.name}</p>
+                        <p className="text-xs text-primary-500 mt-1">¥{addon.price}</p>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCustomer.favorite_addons && selectedCustomer.favorite_addons.length > 0 ? (
+                      selectedCustomer.favorite_addons.map(addon => (
+                        <span
+                          key={addon}
+                          className="px-3 py-1 bg-sage-50 text-sage-600 rounded-full text-sm flex items-center gap-1"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5" />
+                          {addon}
+                        </span>
+                      ))
+                    ) : (
+                      <p className="text-sm text-cocoa-400">暂无常购加购</p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* 客户喜好备注 */}
               <div className="bg-primary-50/50 rounded-xl p-4">
                 <h4 className="font-medium text-cocoa-800 mb-2 flex items-center gap-2">
                   <Heart className="w-4 h-4 text-primary-500" />
-                  客户喜好
+                  备注说明
                 </h4>
                 {isEditing ? (
                   <textarea
@@ -316,19 +505,6 @@ export default function CustomersPage() {
                     {selectedCustomer.preferences || '暂无记录'}
                   </p>
                 )}
-              </div>
-
-              <div>
-                <h4 className="font-medium text-cocoa-800 mb-3 flex items-center gap-2">
-                  <Flower2 className="w-4 h-4 text-primary-500" />
-                  历史订单
-                </h4>
-                <div className="space-y-2">
-                  {/* 这里简化显示，实际可以调用客户详情接口 */}
-                  <p className="text-sm text-cocoa-500 text-center py-4 bg-cocoa-50/50 rounded-xl">
-                    点击查看完整订单记录
-                  </p>
-                </div>
               </div>
 
               <div className="text-xs text-cocoa-400 pt-4 border-t border-cocoa-100">
